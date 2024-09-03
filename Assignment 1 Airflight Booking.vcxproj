@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Airplane.cpp" />
+    <ClCompile Include="FileReader.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Seat.cpp" />
@@ -135,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Airplane.h" />
+    <ClInclude Include="FileReader.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Seat.h" />
     <ClInclude Include="Ticket.h" />
