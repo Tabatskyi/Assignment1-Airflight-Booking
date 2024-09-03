@@ -1,21 +1,20 @@
 #pragma once
 #include <string>
-#include "Seat.h"
+#include "Airplane.h"
 
 using namespace std; 
 
 class Ticket
 {
 public:
-	Ticket(const Seat& InSeat, const string& flight, const string& passenger, const string& date, const string& time);
+	Ticket(const Seat& InSeat, const Airplane& InFlight, const string& InPassenger, const string& InDate, const string& InTime);
 	~Ticket();
 
 
 private:
 	Seat seat;
-	string flight;
+	Airplane flight;
 	string passenger;
 	string date;
 	string time;
 };
-

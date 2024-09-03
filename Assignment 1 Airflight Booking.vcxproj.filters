@@ -27,9 +27,6 @@
     <ClCompile Include="Ticket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AirplaneBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Airplane.h">
@@ -39,9 +36,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ticket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AirplaneBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
