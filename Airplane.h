@@ -12,7 +12,7 @@ public:
 	~Airplane();
 
 	void SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price);
-	bool CheckSeat(const unsigned int& row, const char& column);
+	vector<Seat> CheckSeats(const unsigned int& row, const char& column);
 	void BookSeat(const unsigned int& row, const char& column);
 
 private:

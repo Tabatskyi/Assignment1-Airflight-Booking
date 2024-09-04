@@ -25,16 +25,17 @@ void Airplane::SetSeats(const unsigned int& startRow, const unsigned int& finish
 	}
 }
 
-bool Airplane::CheckSeat(const unsigned int& row, const char& column)
+vector<Seat> Airplane::CheckSeats(const unsigned int& row, const char& column)
 {
-	if (seats[row][column - 65].IsBooked())
+	vector<Seat> availableSeats;
+	for (int i = 0; i < rows; i++)
 	{
-		return false;
+		if (!seats[row][column - 65].IsBooked())
+		{
+			availableSeats.push_back(seats[row][column - 65]);
+		}
 	}
-	else
-	{
-		return true;
-	}
+	return availableSeats;
 }
 
 void Airplane::BookSeat(const unsigned int& row, const char& column)
