@@ -5,7 +5,7 @@
 class Seat
 {
 public:
-	Seat(int InRow, char InColumn);
+	Seat(const unsigned int InRow, const char InColumn, const unsigned int InPrice);
 	~Seat();
 
 	void Book();
@@ -16,11 +16,9 @@ public:
 	bool IsBooked() const;
 	unsigned int GetPrice() const;
 
-	void SetPrice(unsigned int InPrice);
-
 private:
-	unsigned int row;
-	char column;
+	const unsigned int row;
+	const char column;
+	const unsigned int price;
 	bool booked;
-	unsigned int price;
 };

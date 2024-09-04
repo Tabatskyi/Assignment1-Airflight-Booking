@@ -2,14 +2,15 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 class FileReader
 {
+public:
 	FileReader();
 	~FileReader();
 
-	string ReadFile(const string& filename);
+	vector<string> ReadFile(const string& filename);
 };
-

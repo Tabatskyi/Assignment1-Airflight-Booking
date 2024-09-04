@@ -1,9 +1,8 @@
 #include "Seat.h"
 
-Seat::Seat(int InRow, char InColumn) : row(InRow), column(InColumn) 
+Seat::Seat(const unsigned int InRow, const char InColumn, const unsigned int InPrice) : row(InRow), column(InColumn), price(InPrice)
 {
 	booked = false;
-	price = 0;
 }
 Seat::~Seat() {}
 
@@ -30,11 +29,6 @@ unsigned int Seat::GetRow() const
 char Seat::GetColumn() const
 {
 	return column;
-}
-
-void Seat::SetPrice(unsigned int InPrice)
-{
-	price = InPrice;
 }
 
 unsigned int Seat::GetPrice() const 
