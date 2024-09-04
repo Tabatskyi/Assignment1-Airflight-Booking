@@ -8,10 +8,8 @@ using namespace std;
 class Parser
 {
 public:
-	Parser(const string& InSeparator);
+	Parser();
 	~Parser();
-	vector<string> Parse(const string& InString);
-private:
-	const string separator;
+	vector<string> Parse(const string& InString, const string& InSeparator);
 };
 

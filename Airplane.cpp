@@ -2,10 +2,10 @@
 
 Airplane::Airplane(const string& InDate, const int& InColumns) : date(InDate), columns(InColumns) 
 {
-	for (int i = 0; i < rows; i++)
+	for (int i = 0; i < columns; i++)
 	{
-		vector<Seat> row;
-		seats.push_back(row);
+		vector<Seat> col;
+		seats.push_back(col);
 	}
 	rows = 0;
 }
@@ -14,12 +14,12 @@ Airplane::~Airplane() {}
 
 void Airplane::SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price) 
 {
-	for (int i = startRow; i <= finishRow; i++)
+	for (int i = startRow - 1; i < finishRow; i++)
 	{
 		for (int j = 0; j < columns; j++)
 		{
 			Seat seat(i, j + 65, price);
-			seats[i].push_back(seat);
+			seats[j].push_back(seat);
 		}
 		rows++;
 	}

@@ -1,11 +1,12 @@
 #include "Parser.h"
 
-Parser::Parser(const string& InSeparator) : separator(InSeparator) {}
+Parser::Parser() {}
 Parser::~Parser() {}
 
-vector<string> Parser::Parse(const string& InString) 
+vector<string> Parser::Parse(const string& InString, const string& InSeparator)
 {
 	string str = InString;
+	string separator = InSeparator;
     vector<std::string> tokens;
     size_t pos = 0;
     string token;
