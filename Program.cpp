@@ -48,8 +48,12 @@ void book(const string date, const string flightNumber, const string passenger, 
 		return; 
 	}
 
-	vector<shared_ptr<Seat>> availableSeats = airplane->CheckSeats();
 	shared_ptr<Seat> seatToBook = airplane->GetSeat(stoi(seat.substr(0, 1)), seat[1]);
+	if (seatToBook == nullptr)
+	{
+		cout << "Seat " << seat << " is not available";
+		return;
+	}
 	
 	bool success = airplane->BookSeat(seatToBook->GetRow(), seatToBook->GetColumn());
 	if (!success)
@@ -60,7 +64,7 @@ void book(const string date, const string flightNumber, const string passenger, 
 	Ticket ticket(seatToBook, airplane, passenger, date, "00:00");
 	unsigned long ticketID = hash<string>{}(passenger + date + flightNumber + seat);
 	ticketIDMap.insert(make_pair(ticketID, make_shared<Ticket>(ticket)));
-	cout << "Ticket booked for " << passenger << " on flight " << flightNumber << " on " << date << " at " << "00:00";
+	cout << "Ticket " << ticketID << " booked for " << passenger << " on flight " << flightNumber << " on " << date << " seat " << seat << endl;
 }
 
 int main()  
@@ -87,7 +91,7 @@ int main()
         flightPlaneMap.insert(make_pair(parsedString[1], move(airplane)));
 	}
 
-	book("15.12.2022", "AB123", "Joe Mama", "1A");
+	book("15.12.2022", "AB123", "Joe Mama", "9A");
 	book("15.12.2022", "AB123", "Joe Mama", "1B");
 	check("15.12.2022", "AB123");
 	

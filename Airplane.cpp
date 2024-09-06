@@ -14,7 +14,7 @@ Airplane::~Airplane() {}
 
 void Airplane::SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price) 
 {
-	for (int i = startRow - 1; i < finishRow; i++)
+	for (int i = startRow; i <= finishRow; i++)
 	{
 		for (int j = 0; j < columns; j++)
 		{
@@ -48,7 +48,7 @@ string Airplane::GetDate() const
 
 bool Airplane::BookSeat(const unsigned int& row, const char& column)
 {
-	shared_ptr<Seat> seatToBook = seats[row][column - 65];
+	shared_ptr<Seat> seatToBook = seats[column - 65][row - 1];
     if (seatToBook->IsBooked())
     {
         return false;
@@ -59,5 +59,9 @@ bool Airplane::BookSeat(const unsigned int& row, const char& column)
 
 shared_ptr<Seat> Airplane::GetSeat(const unsigned int& row, const char& column) const
 {
-    return seats[row][column - 65];
+	if (row >= rows || column - 65 > columns) 
+	{
+		return nullptr;
+	}
+    return seats[column - 65][row - 1];
 }

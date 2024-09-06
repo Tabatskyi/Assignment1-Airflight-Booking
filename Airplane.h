@@ -21,5 +21,5 @@ private:
 	int rows;
 	int columns;
 	const string date;
-	vector<vector<shared_ptr<Seat>>> seats;
+	vector<vector<shared_ptr<Seat>>> seats; // colummns[rows]
 };
