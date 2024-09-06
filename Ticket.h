@@ -7,18 +7,18 @@ using namespace std;
 class Ticket
 {
 public:
-	Ticket(const Seat& InSeat, const Airplane& InFlight, const string& InPassenger, const string& InDate, const string& InTime);
+	Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate, const string& InTime);
 	~Ticket();
 
-	Seat GetSeat() const;
-	Airplane GetFlight() const;
+	shared_ptr<Seat> GetSeat() const;
+	shared_ptr<Airplane> GetFlight() const;
 	string GetPassenger() const;
 	string GetDate() const;
 	string GetTime() const;
 
 private:
-	Seat seat;
-	Airplane flight;
+	shared_ptr<Seat> seat;
+	shared_ptr<Airplane> flight;
 	string passenger;
 	string date;
 	string time;

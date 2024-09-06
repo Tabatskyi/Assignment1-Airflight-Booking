@@ -12,12 +12,14 @@ public:
 	~Airplane();
 
 	void SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price);
-	vector<Seat> CheckSeats(const unsigned int& row, const char& column);
-	void BookSeat(const unsigned int& row, const char& column);
+	vector<shared_ptr<Seat>> CheckSeats();
+	bool BookSeat(const unsigned int& row, const char& column);
+	string GetDate() const;
+	shared_ptr<Seat> GetSeat(const unsigned int& row, const char& column) const;
 
 private:
 	int rows;
 	int columns;
 	const string date;
-	vector<vector<Seat>> seats;
+	vector<vector<shared_ptr<Seat>>> seats;
 };
