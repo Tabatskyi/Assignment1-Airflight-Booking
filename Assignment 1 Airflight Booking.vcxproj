@@ -141,6 +141,12 @@
     <ClInclude Include="Seat.h" />
     <ClInclude Include="Ticket.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="config">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
