@@ -9,12 +9,19 @@ using namespace std;
 map<tuple<string, string>, shared_ptr<Airplane>> flightPlaneMap = {}; // (Date, Flight Number): Airplane
 map<unsigned long, shared_ptr<Ticket>> ticketIDMap = {}; // ID: Ticket
 map<string, vector<shared_ptr<Ticket>>> ticketPassengerMap = {}; // Passenger: Tickets[]
+map<tuple<string, string>, vector<shared_ptr<Ticket>>> flightTicketsMap = {}; // (Date, Flight Number): Tickets[]
 unique_ptr<FileReader> fileReader = make_unique<FileReader>();
 unique_ptr<Parser> parser = make_unique<Parser>();
 
 void check(const string date, const string flightNumber)
 {
-	shared_ptr<Airplane> airplane = flightPlaneMap[make_tuple(date, flightNumber)];
+	tuple<string, string> key = make_tuple(date, flightNumber);
+	if (!flightPlaneMap.count(key))
+	{
+		cout << "Flight " << flightNumber << " on " << date << " does not exist" << endl;
+		return;
+	}
+	shared_ptr<Airplane> airplane = flightPlaneMap[key];
 
 	vector<shared_ptr<Seat>> availableSeats = airplane->CheckSeats();
 	cout << "Available seats for flight " << flightNumber << " on " << date << " are: ";
@@ -61,12 +68,15 @@ void book(const string date, const string flightNumber, const string passenger, 
 		return;
 	}
 
-	Ticket ticket(seatToBook, airplane, passenger, date);
-	ticketIDMap.insert(make_pair(ticket.GetID(), make_shared<Ticket>(ticket)));
+	shared_ptr<Ticket> ticket = make_shared<Ticket>(seatToBook, airplane, passenger, date);
+	ticketIDMap[ticket->GetID()] = ticket;
 	vector<shared_ptr<Ticket>> passangersTickets = ticketPassengerMap[passenger];
-	passangersTickets.push_back(make_shared<Ticket>(ticket));
-	ticketPassengerMap.insert(make_pair(passenger, passangersTickets));
-	cout << "Ticket " << ticket.GetID() << " booked for " << passenger << " on flight " << flightNumber << " on " << date << " seat " << seat << endl;
+	passangersTickets.push_back(ticket);
+	ticketPassengerMap[passenger] = passangersTickets;
+	vector<shared_ptr<Ticket>> flightTickets = flightTicketsMap[make_tuple(date, flightNumber)];
+	flightTickets.push_back(ticket);
+	flightTicketsMap[make_tuple(date, flightNumber)] = flightTickets;
+	cout << "Ticket " << ticket->GetID() << " booked for " << passenger << " on flight " << flightNumber << " on " << date << " seat " << seat << endl;
 }
 
 void returnTicket(const unsigned long ticketID)
@@ -109,6 +119,21 @@ void viewByPassenger(const string passenger)
 	}
 }
 
+void viewFlight(const string date, const string number) 
+{
+	tuple<string, string> key = make_tuple(date, number);
+	if (!flightPlaneMap.count(key))
+	{
+		cout << "Flight " << number << " on " << date << " does not exist" << endl;
+		return;
+	}
+	vector<shared_ptr<Ticket>> tickets = flightTicketsMap[key];
+	for (int i = 0; i < tickets.size(); i++)
+	{
+		cout << "Ticket " << tickets[i]->GetID() << " for " << tickets[i]->GetPassenger() << " on flight " << number << " on " << date << " seat " << tickets[i]->GetSeat()->GetRow() << tickets[i]->GetSeat()->GetColumn() << " " << tickets[i]->GetSeat()->GetPrice() << "$" << endl;
+	}
+}
+
 int main()  
 {
 	string configName;
@@ -130,7 +155,7 @@ int main()
 			airplane->SetSeats(stoi(parcedRows[0]), stoi(parcedRows[1]), stoi(price));
 		}
 		
-        flightPlaneMap.insert(make_pair(make_tuple(parsedString[0], parsedString[1]), move(airplane)));
+        flightPlaneMap[make_tuple(parsedString[0], parsedString[1])] = airplane;
 	}
 
 	book("15.12.2022", "AB123", "Joe Mama", "9A");
@@ -142,6 +167,7 @@ int main()
 	book("18.12.2022", "CD456", "Joe Mama", "40G");
 	viewByPassenger("Joe Mama");
 	check("18.12.2022", "CD456");
+	viewFlight("18.12.2022", "CD456");
 	
 	return 0;
 }
