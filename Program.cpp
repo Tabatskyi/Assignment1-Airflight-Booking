@@ -91,6 +91,11 @@ void returnTicket(const unsigned long ticketID)
 	ticketIDMap.erase(ticketID);
 	vector<shared_ptr<Ticket>> passangersTickets = ticketPassengerMap[ticket->GetPassenger()];
 	passangersTickets.erase(remove(passangersTickets.begin(), passangersTickets.end(), ticket), passangersTickets.end());
+	ticketPassengerMap[ticket->GetPassenger()] = passangersTickets;
+    vector<shared_ptr<Ticket>> flightTickets = flightTicketsMap[make_tuple(ticket->GetDate(), ticket->GetFlight()->GetNumber())];
+	flightTickets.erase(remove(flightTickets.begin(), flightTickets.end(), ticket), flightTickets.end());
+	flightTicketsMap[make_tuple(ticket->GetDate(), ticket->GetFlight()->GetNumber())] = flightTickets;
+
 	cout << "Ticket " << ticketID << " returned" << endl;
 }
 
@@ -161,13 +166,14 @@ int main()
 	book("15.12.2022", "AB123", "Joe Mama", "9A");
 	book("15.12.2022", "AB123", "Joe Mama", "1B");
 	check("15.12.2022", "AB123");
-	returnTicket(1760443121);
+	returnTicket(4265541278);
 	check("15.12.2022", "AB123");
-	viewByID(1758872336);
+	viewByID(4265541278);
 	book("18.12.2022", "CD456", "Joe Mama", "40G");
 	viewByPassenger("Joe Mama");
 	check("18.12.2022", "CD456");
 	viewFlight("18.12.2022", "CD456");
+	viewFlight("15.12.2022", "AB123");
 	
 	return 0;
 }
