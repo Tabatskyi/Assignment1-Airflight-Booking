@@ -6,7 +6,7 @@ class Seat
 {
 public:
 	Seat(const unsigned int InRow, const char InColumn, const unsigned int InPrice);
-	~Seat();
+	~Seat() = default;
 
 	void Book();
 	void Unbook();

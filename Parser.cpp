@@ -1,8 +1,5 @@
 #include "Parser.h"
 
-Parser::Parser() {}
-Parser::~Parser() {}
-
 vector<string> Parser::Parse(const string& InString, const string& InSeparator)
 {
 	string str(InString);

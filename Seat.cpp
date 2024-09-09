@@ -4,7 +4,6 @@ Seat::Seat(const unsigned int InRow, const char InColumn, const unsigned int InP
 {
 	booked = false;
 }
-Seat::~Seat() {}
 
 void Seat::Book() 
 {

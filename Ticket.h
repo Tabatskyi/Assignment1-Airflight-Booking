@@ -8,7 +8,7 @@ class Ticket
 {
 public:
 	Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate);
-	~Ticket();
+	~Ticket() = default;
 
 	shared_ptr<Seat> GetSeat() const;
 	shared_ptr<Airplane> GetFlight() const;

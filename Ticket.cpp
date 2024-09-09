@@ -3,8 +3,6 @@
 Ticket::Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate)
 	: seat(InSeat), flight(InFlight), passenger(InPassenger), date(InDate) {}
 
-Ticket::~Ticket() {}
-
 shared_ptr<Seat> Ticket::GetSeat() const
 {
 	return seat;

@@ -10,8 +10,6 @@ Airplane::Airplane(const string& InDate, const string& InNumber, const int& InCo
 	rows = 0;
 }
 
-Airplane::~Airplane() {}
-
 void Airplane::SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price) 
 {
 	for (int i = startRow; i <= finishRow; i++)
@@ -59,7 +57,7 @@ bool Airplane::BookSeat(const unsigned int& row, const char& column)
 
 shared_ptr<Seat> Airplane::GetSeat(const unsigned int& row, const char& column) const
 {
-	if (row >= rows || column - 65 > columns) 
+	if (row >= rows || column - 65 > columns || column - 65 < 0) 
 	{
 		return nullptr;
 	}

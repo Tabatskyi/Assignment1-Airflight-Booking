@@ -53,20 +53,20 @@ void book(const string date, const string flightNumber, const string passenger, 
 	}
 	else
 	{
-		cout << "Invalid seat format";
+		cout << "Invalid seat format" << endl;
 		return;
 	}
 
 	shared_ptr<Seat> seatToBook = airplane->GetSeat(row, column);
 	if (seatToBook == nullptr)
 	{
-		cout << "Seat " << seat << " is not available";
+		cout << "Seat " << seat << " is not available" << endl;
 		return;
 	}
 	
 	if (!airplane->BookSeat(seatToBook->GetRow(), seatToBook->GetColumn()))
 	{
-		cout << "Seat " << seat << " is already booked";
+		cout << "Seat " << seat << " is already booked" << endl;
 		return;
 	}
 
@@ -100,8 +100,8 @@ void returnTicket(const unsigned long ticketID)
 
 	cout << "Ticket " << ticketID << " returned" << endl;
 }
-
-void viewByID(const unsigned long ticketID) 
+//view ID
+void view(const unsigned long ticketID) 
 {
 	if (!ticketIDMap.count(ticketID))
 	{
@@ -111,8 +111,8 @@ void viewByID(const unsigned long ticketID)
 	shared_ptr<Ticket> ticket = ticketIDMap[ticketID];
 	cout << "Ticket " << ticketID << " for " << ticket->GetPassenger() << " on flight " << ticket->GetFlight()->GetDate() << " " << ticket->GetFlight()->GetNumber() << " seat " << ticket->GetSeat()->GetRow() << ticket->GetSeat()->GetColumn() << " " << ticket->GetSeat()->GetPrice() << "$" << endl;
 }
-
-void viewByPassenger(const string passenger)
+//view Username
+void view(const string passenger)
 {
 	if (!ticketPassengerMap.count(passenger))
 	{
@@ -125,8 +125,8 @@ void viewByPassenger(const string passenger)
 		cout << "Ticket " << ticket[i]->GetID() << " for " << passenger << " on flight " << ticket[i]->GetFlight()->GetDate() << " " << ticket[i]->GetFlight()->GetNumber() << " seat " << ticket[i]->GetSeat()->GetRow() << ticket[i]->GetSeat()->GetColumn() << " " << ticket[i]->GetSeat()->GetPrice() << "$" << endl;
 	}
 }
-
-void viewFlight(const string date, const string number) 
+//view date flightNo
+void view(const string date, const string number) 
 {
 	tuple<string, string> key = make_tuple(date, number);
 	if (!flightPlaneMap.count(key))
@@ -167,30 +167,17 @@ int main()
         flightPlaneMap[make_tuple(date, number)] = airplane;
 	}
 
-	/*book("15.12.2022", "AB123", "Joe Mama", "9A");
-	book("15.12.2022", "AB123", "Joe Mama", "1B");
-	check("15.12.2022", "AB123");
-	returnTicket(4265541278);
-	check("15.12.2022", "AB123");
-	viewByID(4265541278); 
-	book("18.12.2022", "CD456 ", "Joe Mama", "40G");
-	viewByPassenger("Joe Mama");
-	check("18.12.2022", "CD456");
-	viewFlight("18.12.2022", "CD456");
-	viewFlight("15.12.2022", "AB123");*/
-
 	string input;
 	do 
 	{
 		cout << ">";
-		string line;
 		vector<string> parsedInput;
-		getline(cin, line);
+		getline(cin, input);
 
-		if (line.empty())
+		if (input.empty())
 			continue;
 
-		parsedInput = parser->Parse(line, " ");
+		parsedInput = parser->Parse(input, " ");
 
 		string command = parsedInput[0];
 		if (command == "check")
@@ -218,27 +205,27 @@ int main()
 			if (!any_of(type.begin(), type.end(), isdigit))
 			{
 				string passenger = type + " " + parsedInput[2];
-				viewByPassenger(passenger); 
+				view(passenger); 
 			}
 			else
 			{
 				if (all_of(type.begin(), type.end(), isdigit))
 				{
 					unsigned long ticketID = stoul(type);
-					viewByID(ticketID);
+					view(ticketID);
 				}
 				else if (parser->Parse(type, ".").size() == 3)
 				{
 					string date = type;
 					string number = parsedInput[2];
-					viewFlight(date, number);
+					view(date, number);
 				}
 			}
 		}
 		else if (command == "help")
-		{
 			cout << "Commands:\n check date flightNo\n book date flightNo place Username\n return ID\n view ID\n view Username\n view date flightNo\n help\n quit" << endl;
-		}
+		else if (command == "quit")
+			cout << "Goodbye!" << endl;
 		else
 			cout << "Invalid command" << endl;
 	} 

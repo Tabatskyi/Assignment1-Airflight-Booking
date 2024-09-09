@@ -10,8 +10,8 @@ using namespace std;
 class FileReader
 {
 public:
-	FileReader();
-	~FileReader();
+	FileReader() {};
+	~FileReader() = default;
 
 	vector<string> ReadFile(const string& filename);
 

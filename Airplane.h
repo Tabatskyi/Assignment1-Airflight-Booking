@@ -9,7 +9,7 @@ class Airplane
 {
 public:
 	Airplane(const string& InDate, const string& InNumber, const int& InColumns);
-	~Airplane();
+	~Airplane() = default;
 
 	void SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price);
 	vector<shared_ptr<Seat>> CheckSeats();
