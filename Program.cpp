@@ -143,11 +143,7 @@ void viewFlight(const string date, const string number)
 
 int main()  
 {
-	string configName;
-
-	cout << "Hello, enter config filename:\n>";
-	cin >> configName;
-	
+	string configName = "config";
 	vector<string> fileContent = fileReader->ReadFile(configName);
 	
 	for (int i = 1; i < fileContent.size(); i++)
@@ -238,6 +234,10 @@ int main()
 					viewFlight(date, number);
 				}
 			}
+		}
+		else if (command == "help")
+		{
+			cout << "Commands:\n check date flightNo\n book date flightNo place Username\n return ID\n view ID\n view Username\n view date flightNo\n help\n quit" << endl;
 		}
 		else
 			cout << "Invalid command" << endl;
