@@ -153,16 +153,22 @@ int main()
 	for (int i = 1; i < fileContent.size(); i++)
 	{
 		vector<string> parsedString = parser->Parse(fileContent[i], " ");
-		shared_ptr<Airplane> airplane = make_shared<Airplane>(parsedString[0], parsedString[1], stoi(parsedString[2]));
+		string date = parsedString[0];
+		string number = parsedString[1];
+		unsigned int columns = stoi(parsedString[2]);
+		shared_ptr<Airplane> airplane = make_shared<Airplane>(date, number, columns);
 		for (int j = 3; j < parsedString.size(); j+=2)
 		{
-			vector<string> parcedRows = parser->Parse(parsedString[j], "-");
+			string rows = parsedString[j];
+			vector<string> parcedRows = parser->Parse(rows, "-");
 			string price = parsedString[j + 1];
 			price.pop_back();
-			airplane->SetSeats(stoi(parcedRows[0]), stoi(parcedRows[1]), stoi(price));
+			unsigned int startRow = stoi(parcedRows[0]);
+			unsigned int finishRow = stoi(parcedRows[1]);
+			airplane->SetSeats(startRow, finishRow, stoi(price));
 		}
 		
-        flightPlaneMap[make_tuple(parsedString[0], parsedString[1])] = airplane;
+        flightPlaneMap[make_tuple(date, number)] = airplane;
 	}
 
 	/*book("15.12.2022", "AB123", "Joe Mama", "9A");
@@ -170,8 +176,8 @@ int main()
 	check("15.12.2022", "AB123");
 	returnTicket(4265541278);
 	check("15.12.2022", "AB123");
-	viewByID(4265541278);
-	book("18.12.2022", "CD456", "Joe Mama", "40G");
+	viewByID(4265541278); 
+	book("18.12.2022", "CD456 ", "Joe Mama", "40G");
 	viewByPassenger("Joe Mama");
 	check("18.12.2022", "CD456");
 	viewFlight("18.12.2022", "CD456");
@@ -193,37 +199,48 @@ int main()
 		string command = parsedInput[0];
 		if (command == "check")
 		{
-			check(parsedInput[1], parsedInput[2]);
+			string date = parsedInput[1];
+			string flightNumber = parsedInput[2];
+			check(date, flightNumber);
 		}
 		else if (command == "book")
 		{
-			book(parsedInput[1], parsedInput[2], parsedInput[3], parsedInput[4]);
+			string date = parsedInput[1];
+			string number = parsedInput[2];
+			string passenger = parsedInput[3] + " " + parsedInput[4];
+			string seat = parsedInput[5];
+			book(date, number, passenger, seat);
 		}
 		else if (command == "return")
 		{
-			returnTicket(stoul(parsedInput[1]));
+			unsigned long ticketID = stoul(parsedInput[1]);
+			returnTicket(ticketID);
 		}
 		else if (command == "view")
 		{
 			string type = parsedInput[1];
 			if (!any_of(type.begin(), type.end(), isdigit))
 			{
-				viewByPassenger(type + " " + parsedInput[2]);
+				string passenger = type + " " + parsedInput[2];
+				viewByPassenger(passenger); 
 			}
 			else
 			{
 				if (all_of(type.begin(), type.end(), isdigit))
 				{
-					viewByID(stoul(type));
+					unsigned long ticketID = stoul(type);
+					viewByID(ticketID);
 				}
 				else if (parser->Parse(type, ".").size() == 3)
 				{
-					viewFlight(type, parsedInput[2]);
+					string date = type;
+					string number = parsedInput[2];
+					viewFlight(date, number);
 				}
 			}
 		}
 		else
-			cout << "Invalid command";
+			cout << "Invalid command" << endl;
 	} 
 	while (input != "quit");
 	
