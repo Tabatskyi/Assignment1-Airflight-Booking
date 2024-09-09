@@ -2,6 +2,8 @@
 #include "Parser.h"
 #include "FileReader.h"
 #include <map>
+#include <algorithm>
+#include <iostream>
 
 
 using namespace std;
@@ -143,7 +145,7 @@ int main()
 {
 	string configName;
 
-	cout << "Hello";
+	cout << "Hello, enter config filename:\n>";
 	cin >> configName;
 	
 	vector<string> fileContent = fileReader->ReadFile(configName);
@@ -163,7 +165,7 @@ int main()
         flightPlaneMap[make_tuple(parsedString[0], parsedString[1])] = airplane;
 	}
 
-	book("15.12.2022", "AB123", "Joe Mama", "9A");
+	/*book("15.12.2022", "AB123", "Joe Mama", "9A");
 	book("15.12.2022", "AB123", "Joe Mama", "1B");
 	check("15.12.2022", "AB123");
 	returnTicket(4265541278);
@@ -173,7 +175,57 @@ int main()
 	viewByPassenger("Joe Mama");
 	check("18.12.2022", "CD456");
 	viewFlight("18.12.2022", "CD456");
-	viewFlight("15.12.2022", "AB123");
+	viewFlight("15.12.2022", "AB123");*/
+
+	string input;
+	do 
+	{
+		cout << ">";
+		string line;
+		vector<string> parsedInput;
+		getline(cin, line);
+
+		if (line.empty())
+			continue;
+
+		parsedInput = parser->Parse(line, " ");
+
+		string command = parsedInput[0];
+		if (command == "check")
+		{
+			check(parsedInput[1], parsedInput[2]);
+		}
+		else if (command == "book")
+		{
+			book(parsedInput[1], parsedInput[2], parsedInput[3], parsedInput[4]);
+		}
+		else if (command == "return")
+		{
+			returnTicket(stoul(parsedInput[1]));
+		}
+		else if (command == "view")
+		{
+			string type = parsedInput[1];
+			if (!any_of(type.begin(), type.end(), isdigit))
+			{
+				viewByPassenger(type + " " + parsedInput[2]);
+			}
+			else
+			{
+				if (all_of(type.begin(), type.end(), isdigit))
+				{
+					viewByID(stoul(type));
+				}
+				else if (parser->Parse(type, ".").size() == 3)
+				{
+					viewFlight(type, parsedInput[2]);
+				}
+			}
+		}
+		else
+			cout << "Invalid command";
+	} 
+	while (input != "quit");
 	
 	return 0;
 }
