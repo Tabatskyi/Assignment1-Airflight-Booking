@@ -1,6 +1,6 @@
 #include "Airplane.h"
 
-Airplane::Airplane(const string& InDate, const int& InColumns) : date(InDate), columns(InColumns) 
+Airplane::Airplane(const string& InDate, const string& InNumber, const int& InColumns) : date(InDate), number(InNumber), columns(InColumns)
 {
 	for (int i = 0; i < columns; i++)
 	{
@@ -64,4 +64,9 @@ shared_ptr<Seat> Airplane::GetSeat(const unsigned int& row, const char& column) 
 		return nullptr;
 	}
     return seats[column - 65][row - 1];
+}
+
+string Airplane::GetNumber() const
+{
+	return number;
 }

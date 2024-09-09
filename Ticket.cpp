@@ -1,7 +1,7 @@
 #include "Ticket.h"
 
-Ticket::Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate, const string& InTime)
-	: seat(InSeat), flight(InFlight), passenger(InPassenger), date(InDate), time(InTime) {}
+Ticket::Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate)
+	: seat(InSeat), flight(InFlight), passenger(InPassenger), date(InDate) {}
 
 Ticket::~Ticket() {}
 
@@ -25,7 +25,7 @@ string Ticket::GetDate() const
 	return date;
 }
 
-string Ticket::GetTime() const
+unsigned long Ticket::GetID() const
 {
-	return time;
+	return hash<string>{}(passenger + date + flight->GetDate() + flight->GetNumber() + to_string(seat->GetRow()) + seat->GetColumn());
 }

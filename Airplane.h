@@ -8,7 +8,7 @@ using namespace std;
 class Airplane
 {
 public:
-	Airplane(const string& InDate, const int& InColumns);
+	Airplane(const string& InDate, const string& InNumber, const int& InColumns);
 	~Airplane();
 
 	void SetSeats(const unsigned int& startRow, const unsigned int& finishRow, const unsigned int& price);
@@ -16,10 +16,12 @@ public:
 	bool BookSeat(const unsigned int& row, const char& column);
 	string GetDate() const;
 	shared_ptr<Seat> GetSeat(const unsigned int& row, const char& column) const;
+	string GetNumber() const;
 
 private:
 	int rows;
 	int columns;
 	const string date;
-	vector<vector<shared_ptr<Seat>>> seats; // colummns[rows]
+	const string number;
+	vector<vector<shared_ptr<Seat>>> seats; // [colummns[rows]]
 };

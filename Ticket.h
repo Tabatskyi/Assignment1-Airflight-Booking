@@ -7,7 +7,7 @@ using namespace std;
 class Ticket
 {
 public:
-	Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate, const string& InTime);
+	Ticket(const shared_ptr<Seat>& InSeat, const shared_ptr<Airplane>& InFlight, const string& InPassenger, const string& InDate);
 	~Ticket();
 
 	shared_ptr<Seat> GetSeat() const;
@@ -15,11 +15,11 @@ public:
 	string GetPassenger() const;
 	string GetDate() const;
 	string GetTime() const;
+	unsigned long GetID() const;
 
 private:
 	shared_ptr<Seat> seat;
 	shared_ptr<Airplane> flight;
 	string passenger;
 	string date;
-	string time;
 };
