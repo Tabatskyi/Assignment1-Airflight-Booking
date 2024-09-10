@@ -145,6 +145,11 @@ int main()
 {
 	string configName = "config";
 	vector<string> fileContent = fileReader->ReadFile(configName);
+	if (fileContent.size() < 2) 
+	{
+		cout << "Invalid config file";
+		return 1;
+	}
 	
 	for (int i = 1; i < fileContent.size(); i++)
 	{
