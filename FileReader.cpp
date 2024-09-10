@@ -12,7 +12,8 @@ vector<string> FileReader::ReadFile(const string& filename)
 	string line;
 	while (getline(file, line))
 	{
-		fileContent.push_back(line);
+		if (!line.empty())
+			fileContent.push_back(line);
 	}
 	file.close();
 

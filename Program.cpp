@@ -187,30 +187,56 @@ int main()
 		string command = parsedInput[0];
 		if (command == "check")
 		{
+			if (parsedInput.size() < 3)
+			{
+				cout << "Invalid input" << endl;
+				continue;
+			}
 			string date = parsedInput[1];
 			string flightNumber = parsedInput[2];
 			check(date, flightNumber);
 		}
 		else if (command == "book")
 		{
+			if (parsedInput.size() < 5)
+			{
+				cout << "Invalid input" << endl;
+				continue;
+			}
 			string date = parsedInput[1];
 			string number = parsedInput[2];
-			string passenger = parsedInput[3] + " " + parsedInput[4];
-			string seat = parsedInput[5];
+			string passenger = parsedInput[3];
+			if (parsedInput.size() > 5)
+				for (int i = 4; i < parsedInput.size() - 1; i++)
+					passenger += " " + parsedInput[i];
+			string seat = parsedInput.back();
 			book(date, number, passenger, seat);
 		}
 		else if (command == "return")
 		{
+			if (parsedInput.size() < 2)
+			{
+				cout << "Invalid input" << endl;
+				continue;
+			}
 			unsigned long ticketID = stoul(parsedInput[1]);
 			returnTicket(ticketID);
 		}
 		else if (command == "view")
 		{
+			if (parsedInput.size() < 2)
+			{
+				cout << "Invalid input" << endl;
+				continue;
+			}
 			string type = parsedInput[1];
 			if (!any_of(type.begin(), type.end(), isdigit))
 			{
-				string passenger = type + " " + parsedInput[2];
-				view(passenger); 
+				if (parsedInput.size() > 2)
+					for (int i = 2; i < parsedInput.size(); i++)
+						type += " " + parsedInput[i];
+
+				view(type); 
 			}
 			else
 			{
