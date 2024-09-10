@@ -57,11 +57,12 @@ bool Airplane::BookSeat(const unsigned int& row, const char& column)
 
 shared_ptr<Seat> Airplane::GetSeat(const unsigned int& row, const char& column) const
 {
-	if (row >= rows || column - 65 > columns || column - 65 < 0) 
+	unsigned int columnNumber = column - 65;
+	if (row <= 0 || row > rows || columnNumber < 0 || columnNumber > columns )
 	{
 		return nullptr;
 	}
-    return seats[column - 65][row - 1];
+    return seats[columnNumber][row - 1];
 }
 
 string Airplane::GetNumber() const

@@ -1,29 +1,24 @@
-#include "Ticket.h"
 #include "Parser.h"
+#include "Database.h"
 #include "FileReader.h"
-#include <map>
 #include <algorithm>
 #include <iostream>
 
 
 using namespace std;
 
-map<tuple<string, string>, shared_ptr<Airplane>> flightPlaneMap = {}; // (Date, Flight Number): Airplane
-map<unsigned long, shared_ptr<Ticket>> ticketIDMap = {}; // ID: Ticket
-map<string, vector<shared_ptr<Ticket>>> ticketPassengerMap = {}; // Passenger: Tickets[]
-map<tuple<string, string>, vector<shared_ptr<Ticket>>> flightTicketsMap = {}; // (Date, Flight Number): Tickets[]
 unique_ptr<FileReader> fileReader = make_unique<FileReader>();
 unique_ptr<Parser> parser = make_unique<Parser>();
+unique_ptr<Database> database = make_unique<Database>();
 
 void check(const string date, const string flightNumber)
 {
-	tuple<string, string> key = make_tuple(date, flightNumber);
-	if (!flightPlaneMap.count(key))
+	shared_ptr<Airplane> airplane = database->GetAirplane(date, flightNumber);
+	if (airplane == nullptr)
 	{
 		cout << "Flight " << flightNumber << " on " << date << " does not exist" << endl;
 		return;
 	}
-	shared_ptr<Airplane> airplane = flightPlaneMap[key];
 
 	vector<shared_ptr<Seat>> availableSeats = airplane->CheckSeats();
 	cout << "Available seats for flight " << flightNumber << " on " << date << " are: ";
@@ -37,7 +32,7 @@ void check(const string date, const string flightNumber)
 
 void book(const string date, const string flightNumber, const string passenger, const string seat)
 {
-	shared_ptr<Airplane> airplane = flightPlaneMap[make_tuple(date, flightNumber)];
+	shared_ptr<Airplane> airplane = database->GetAirplane(date, flightNumber);
 	unsigned int row;
 	char column;
 
@@ -71,70 +66,57 @@ void book(const string date, const string flightNumber, const string passenger, 
 	}
 
 	shared_ptr<Ticket> ticket = make_shared<Ticket>(seatToBook, airplane, passenger, date);
-	ticketIDMap[ticket->GetID()] = ticket;
-	vector<shared_ptr<Ticket>> passangersTickets = ticketPassengerMap[passenger];
-	passangersTickets.push_back(ticket);
-	ticketPassengerMap[passenger] = passangersTickets;
-	vector<shared_ptr<Ticket>> flightTickets = flightTicketsMap[make_tuple(date, flightNumber)];
-	flightTickets.push_back(ticket);
-	flightTicketsMap[make_tuple(date, flightNumber)] = flightTickets;
+	database->AddTicket(airplane, passenger, seatToBook);
 	cout << "Ticket " << ticket->GetID() << " booked for " << passenger << " on flight " << flightNumber << " on " << date << " seat " << seat << endl;
 }
 
 void returnTicket(const unsigned long ticketID)
 {
-	if (!ticketIDMap.count(ticketID))
+	shared_ptr<Ticket> ticket = database->GetTicket(ticketID);
+	if (ticket == nullptr)
 	{
 		cout << "Ticket " << ticketID << " does not exist" << endl;
 		return;
 	}
-	shared_ptr<Ticket> ticket = ticketIDMap[ticketID];
 	ticket->GetSeat()->Unbook();
-	ticketIDMap.erase(ticketID);
-	vector<shared_ptr<Ticket>> passangersTickets = ticketPassengerMap[ticket->GetPassenger()];
-	passangersTickets.erase(remove(passangersTickets.begin(), passangersTickets.end(), ticket), passangersTickets.end());
-	ticketPassengerMap[ticket->GetPassenger()] = passangersTickets;
-    vector<shared_ptr<Ticket>> flightTickets = flightTicketsMap[make_tuple(ticket->GetDate(), ticket->GetFlight()->GetNumber())];
-	flightTickets.erase(remove(flightTickets.begin(), flightTickets.end(), ticket), flightTickets.end());
-	flightTicketsMap[make_tuple(ticket->GetDate(), ticket->GetFlight()->GetNumber())] = flightTickets;
+	database->RemoveTicket(ticket);
 
 	cout << "Ticket " << ticketID << " returned" << endl;
 }
 //view ID
 void view(const unsigned long ticketID) 
 {
-	if (!ticketIDMap.count(ticketID))
+	shared_ptr<Ticket> ticket = database->GetTicket(ticketID);
+	if (ticket == nullptr)
 	{
 		cout << "Ticket " << ticketID << " does not exist" << endl;
 		return;
 	}
-	shared_ptr<Ticket> ticket = ticketIDMap[ticketID];
 	cout << "Ticket " << ticketID << " for " << ticket->GetPassenger() << " on flight " << ticket->GetFlight()->GetDate() << " " << ticket->GetFlight()->GetNumber() << " seat " << ticket->GetSeat()->GetRow() << ticket->GetSeat()->GetColumn() << " " << ticket->GetSeat()->GetPrice() << "$" << endl;
 }
 //view Username
 void view(const string passenger)
 {
-	if (!ticketPassengerMap.count(passenger))
+	vector<shared_ptr<Ticket>> tickets = database->GetTickets(passenger);
+	if (tickets.size() < 1)
 	{
 		cout << "Passenger " << passenger << " does not have any tickets" << endl;
 		return;
 	}
-	vector<shared_ptr<Ticket>> ticket = ticketPassengerMap[passenger];
-	for (int i = 0; i < ticket.size(); i++)
+	for (int i = 0; i < tickets.size(); i++)
 	{
-		cout << "Ticket " << ticket[i]->GetID() << " for " << passenger << " on flight " << ticket[i]->GetFlight()->GetDate() << " " << ticket[i]->GetFlight()->GetNumber() << " seat " << ticket[i]->GetSeat()->GetRow() << ticket[i]->GetSeat()->GetColumn() << " " << ticket[i]->GetSeat()->GetPrice() << "$" << endl;
+		cout << "Ticket " << tickets[i]->GetID() << " for " << passenger << " on flight " << tickets[i]->GetFlight()->GetDate() << " " << tickets[i]->GetFlight()->GetNumber() << " seat " << tickets[i]->GetSeat()->GetRow() << tickets[i]->GetSeat()->GetColumn() << " " << tickets[i]->GetSeat()->GetPrice() << "$" << endl;
 	}
 }
 //view date flightNo
 void view(const string date, const string number) 
 {
-	tuple<string, string> key = make_tuple(date, number);
-	if (!flightPlaneMap.count(key))
+	vector<shared_ptr<Ticket>> tickets = database->GetTickets(date, number);
+	if (tickets.size() < 1)
 	{
-		cout << "Flight " << number << " on " << date << " does not exist" << endl;
+		cout << "Flight " << number << " on " << date << " does not have any booked tickets" << endl;
 		return;
 	}
-	vector<shared_ptr<Ticket>> tickets = flightTicketsMap[key];
 	for (int i = 0; i < tickets.size(); i++)
 	{
 		cout << "Ticket " << tickets[i]->GetID() << " for " << tickets[i]->GetPassenger() << " on flight " << number << " on " << date << " seat " << tickets[i]->GetSeat()->GetRow() << tickets[i]->GetSeat()->GetColumn() << " " << tickets[i]->GetSeat()->GetPrice() << "$" << endl;
@@ -169,7 +151,7 @@ int main()
 			airplane->SetSeats(startRow, finishRow, stoi(price));
 		}
 		
-        flightPlaneMap[make_tuple(date, number)] = airplane;
+		database->AddAirplane(date, number, airplane);
 	}
 
 	string input;

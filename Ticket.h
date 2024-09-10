@@ -14,7 +14,6 @@ public:
 	shared_ptr<Airplane> GetFlight() const;
 	string GetPassenger() const;
 	string GetDate() const;
-	string GetTime() const;
 	unsigned long GetID() const;
 
 private:
