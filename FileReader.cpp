@@ -15,4 +15,5 @@ vector<string> FileReader::ReadFile(const string& filename)
 		}
 		file.close();
 	}
+	return fileContent;
 }
