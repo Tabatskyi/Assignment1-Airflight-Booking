@@ -7,9 +7,6 @@
 class Database
 {
 public:
-	Database() {};
-	~Database() = default;
-
 	void AddAirplane(const string date, const string flightNumber, const shared_ptr<Airplane> airplane);
 	void AddTicket(const shared_ptr<Airplane> airplane, const string passenger, const shared_ptr<Seat> seat);
 	void RemoveTicket(shared_ptr<Ticket> ticket);
